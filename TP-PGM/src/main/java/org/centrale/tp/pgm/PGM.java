@@ -14,22 +14,33 @@ import java.util.logging.Logger;
 
 /**
  * 
- * @author loicpatigny
+ * @author pierrebaudet, loicpatigny
  */
 public class PGM {
+    // Attributs
     String type;
     String commentaire;
     int largeur;
     int hauteur;
-    int gris = 255;
+    int gris;
     List<List<Integer>> contenu;
     
 
     // Constructeurs
-
+    
+    /**
+     * Constructeur vide de PGM
+     */
     public PGM() {
     }
     
+    /**
+     * Constructeur sans contenu de PGM
+     * @param type le type de PGM
+     * @param commentaire un commentaire sur le fichier
+     * @param largeur
+     * @param hauteur 
+     */
     public PGM(String type, String commentaire, int largeur, int hauteur) {
         this.type = type;
         this.commentaire = commentaire;
@@ -37,7 +48,14 @@ public class PGM {
         this.hauteur = hauteur;
     }
     
-
+    /**
+     * Constructeur complet de PGM
+     * @param type le type de PGM
+     * @param commentaire eventuel commentaire sur le fichier
+     * @param largeur
+     * @param hauteur
+     * @param contenu 
+     */
     public PGM(String type, String commentaire, int largeur, int hauteur, List<List<Integer>> contenu) {
         this.type = type;
         this.commentaire = commentaire;
@@ -93,6 +111,9 @@ public class PGM {
     
     // Methodes
     
+    /**
+     * Methode pour remplir le contenu d'un objet de type PGM par des pixels blancs
+     */
     public void remplirAvecBlanc() {
         List<List<Integer>> nouveauContenu = new ArrayList<>(this.hauteur);
         for (int k = 0; k < this.hauteur; k++) {
@@ -103,6 +124,10 @@ public class PGM {
         this.contenu = nouveauContenu;
     }
     
+    /**
+     * Methode servant à calculer l'histogramme du PGM selectionné.
+     * @return renvoie l'histogramme du PGM.
+     */
     private List<Integer> calculeHistogramme() {
         List<Integer> histogramme = new ArrayList<>(this.gris + 1);
         Collections.fill(histogramme, 0);
@@ -114,6 +139,11 @@ public class PGM {
         return histogramme;
     }
     
+    /**
+     * Methode visant à convertir un histogramme en une image de type .pgm.
+     * @param histogramme un histogramme de PGM.
+     * @return Renvoie l'histogramme sous forme d'image.
+     */
     private PGM convertirHistogrammeEnImage(List<Integer> histogramme) {
         
         // Recupere la taille de l'image de l'histogramme
@@ -138,6 +168,10 @@ public class PGM {
         return imageHistogramme;   
     } 
     
+    /**
+     * Methode créant un Histogramme à partir d'un fichier chargé.
+     * @param nomFichier Fichier chargé de type .pgm.
+     */
     public void creeHistogramme(String nomFichier) {
         List<Integer> histogramme = this.calculeHistogramme();
         PGM imageHistogramme = this.convertirHistogrammeEnImage(histogramme);
@@ -145,17 +179,16 @@ public class PGM {
     }
     
     /**
-     * La fonction lire permet de lire un fichier .pgm comme un fichier texte et créer l'objet comme un PGM pour pouvoir effectuer des manipulations avec.
+     * Methode permettant de lire un fichier .pgm comme un fichier texte et créer l'objet comme un PGM pour pouvoir effectuer des manipulations avec.
      * @param nomFichier le nom du fichier dans lequel se situe l'image PGM
      */
-    //FIXME gerer la matrice de pixels
     public void lire(String nomFichier){
         try{
             //lecture du fichier
             FileInputStream file = new FileInputStream(nomFichier);
             Scanner scanner = new Scanner(file);
             
-            //creation et remplissage d'un objet PGM
+            //remplissage dans un objet PGM
             this.setType(scanner.nextLine());
             this.setCommentaire(scanner.nextLine());
             String[] str = scanner.nextLine().split(" ");
@@ -182,27 +215,4 @@ public class PGM {
         }
         
     }
-    
-    public void histogramme(){
-        
-    }
-    
-    
-    public void seuillage(){
-        
-    }
-    
-    public void difference(){
-        
-    }
-    
-    public void agrandissement(){
-        
-    }
-    
-    public void reduction(){
-        
-    } 
-
-
 }
