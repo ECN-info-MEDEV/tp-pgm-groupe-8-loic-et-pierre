@@ -80,4 +80,19 @@ public class PGM {
     }
     
     
+    public void seuillage(){
+        
+    }
+    
+    public void difference(){
+        
+    }
+    
+    public void agrandissement(){
+        
+    }
+    
+    public void reduction(){
+        
+    } 
 }
