@@ -32,6 +32,7 @@ public class PGM {
      * Constructeur vide de PGM
      */
     public PGM() {
+        this.contenu = new ArrayList<>();
     }
     
     /**
@@ -191,10 +192,10 @@ public class PGM {
             //remplissage dans un objet PGM
             this.setType(scanner.nextLine());
             this.setCommentaire(scanner.nextLine());
-            String[] str = scanner.nextLine().split(" ");
-            this.setLargeur(Integer.valueOf(str[0]));
-            this.setHauteur(Integer.valueOf(str[1]));
-            this.setGris(Integer.valueOf(scanner.nextLine()));
+            String[] str = scanner.nextLine().split("\\s+");
+            this.setLargeur(Integer.parseInt(str[0]));
+            this.setHauteur(Integer.parseInt(str[1]));
+            this.setGris(Integer.parseInt(scanner.nextLine()));
             
             //gestion de la matrice de pixels
             int j = 0;
@@ -202,12 +203,15 @@ public class PGM {
                 int i = 0;
                 List ligne = new ArrayList<Integer>(this.getLargeur());
                 while (i < this.getLargeur()){
-                    for (String pixel : scanner.nextLine().split(" ")){
-                        ligne.add(Integer.valueOf(pixel));
-                        i+=1;
+                    for (String pixel : scanner.nextLine().split("\\s+")) {
+                        if (pixel.matches("\\d+")) {
+                            ligne.add(Integer.valueOf(pixel));
+                            i += 1;
+                        }
                     }
                 }
                 this.contenu.add(ligne);
+                j += 1;
             }
             
         } catch (FileNotFoundException ex) {
