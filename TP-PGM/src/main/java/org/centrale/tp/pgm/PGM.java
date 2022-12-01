@@ -6,6 +6,7 @@ package org.centrale.tp.pgm;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -29,6 +30,12 @@ public class PGM {
     public PGM() {
     }
     
+    public PGM(String type, String commentaire, int largeur, int hauteur) {
+        this.type = type;
+        this.commentaire = commentaire;
+        this.largeur = largeur;
+        this.hauteur = hauteur;
+    }
     
 
     public PGM(String type, String commentaire, int largeur, int hauteur, List<List<Integer>> contenu) {
@@ -85,6 +92,57 @@ public class PGM {
     
     
     // Methodes
+    
+    public void remplirAvecBlanc() {
+        List<List<Integer>> nouveauContenu = new ArrayList<>(this.hauteur);
+        for (int k = 0; k < this.hauteur; k++) {
+            List<Integer> line = new ArrayList<>(this.largeur);
+            Collections.fill(line, this.gris);
+            nouveauContenu.set(k, line);
+        }
+        this.contenu = nouveauContenu;
+    }
+    
+    private List<Integer> calculeHistogramme() {
+        List<Integer> histogramme = new ArrayList<>(this.gris + 1);
+        Collections.fill(histogramme, 0);
+        for (List<Integer> ligne : this.contenu) {
+            for (int pixel : ligne) {
+                histogramme.set(pixel, histogramme.get(pixel) + 1);
+            }
+        }
+        return histogramme;
+    }
+    
+    private PGM convertirHistogrammeEnImage(List<Integer> histogramme) {
+        
+        // Recupere la taille de l'image de l'histogramme
+        int largeurImage = 2 * (this.gris + 1) + 1;
+        int hauteurImage = Collections.max(histogramme) + 4;
+        
+        // Cree l'image vide (blanche) de l'histogramme
+        PGM imageHistogramme = new PGM(this.type, "", largeurImage, hauteurImage);
+        imageHistogramme.remplirAvecBlanc();
+        
+        // Remplit l'image de l'histogramme
+        for (int g = 0; g < this.gris + 1; g++) {
+            for (int l = 0; l < hauteurImage; l++) {
+                if (l >= 1 && l <= 1 + histogramme.get(g)) { // Si dans la bin
+                    imageHistogramme.contenu.get(l).set(1 + 2 * g, this.gris);
+                } else if (l == hauteurImage - 2){ // Si en dessous la bin
+                    imageHistogramme.contenu.get(l).set(1 + 2 * g, g);
+                }
+            }
+        }
+        
+        return imageHistogramme;   
+    } 
+    
+    public void creeHistogramme(String nomFichier) {
+        List<Integer> histogramme = this.calculeHistogramme();
+        PGM imageHistogramme = this.convertirHistogrammeEnImage(histogramme);
+        imageHistogramme.enregistre(nomFichier);
+    }
     
     /**
      * La fonction lire permet de lire un fichier .pgm comme un fichier texte et créer l'objet comme un PGM pour pouvoir effectuer des manipulations avec.
